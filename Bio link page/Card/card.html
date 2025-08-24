@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>bkz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    
+    html, body, * {
+      cursor: url('/cursors/cursor.cur'), auto !important;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: url('images/rainforest.png') center center/cover no-repeat fixed, #15141a;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    a, button {
+      cursor: url('/cursors/cursor.png'), pointer !important;
+      transition: filter 0.3s, box-shadow 0.3s, transform 0.3s;
+      outline: none;
+    }
+    .glass-card {
+      position: relative;
+      z-index: 1;
+      width: 540px;
+      background: transparent;
+      border-radius: 38px;
+      box-shadow: none;
+      padding: 44px 44px 28px 44px;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      border: none;
+      background-clip: padding-box;
+      will-change: transform;
+    }
+    .glass-card.tilted {
+      background: transparent;
+      box-shadow: none;
+    }
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 38px;
+      pointer-events: none;
+      box-shadow: none;
+      opacity: 0;
+      z-index: 0;
+      background: none;
+    }
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 18px;
+      width: 100%;
+      position: relative;
+    }
+    .profile-avatar {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,0.16);
+      animation: avatarGlow 2.5s infinite alternate;
+      filter: drop-shadow(0 0 26px #b86fffcc);
+      box-shadow: 0 0 0 8px #b86fff44;
+    }
+    @keyframes avatarGlow {
+      0% { box-shadow: 0 0 0 8px #b86fff44;}
+      100% { box-shadow: 0 0 0 18px #b86fff99;}
+    }
+    .profile-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+    .profile-name {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #b86fff;
+      letter-spacing: 4px;
+      text-align: center;
+      text-shadow: 0 2px 28px #b86fff, 0 0 12px #000, 0 0 58px #b86fff;
+      filter: drop-shadow(0 0 16px #b86fff);
+      position: relative;
+      animation: flicker 1.3s infinite alternate;
+      background: linear-gradient(90deg, #b86fff 40%, #fff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      user-select: text;
+    }
+    @keyframes flicker {
+      0% { opacity: 1;}
+      25% { opacity: 0.96;}
+      50% { opacity: 1;}
+      75% { opacity: 0.99;}
+      100% { opacity: 1;}
+    }
+   .tag.tag-icon {
+  padding: 6px; /* add some padding inside the square */
+  border-radius: 6px; /* small rounded corners for a clean square */
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  background: rgba(255, 255, 255, 0.15); /* transparent light background */
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.1); /* subtle glow */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  opacity: 1;
+  transition: box-shadow 0.3s, background 0.3s;
+  animation: none; /* remove pulse animation for subtlety */
+}
+
+.tag.tag-icon img {
+  width: 20px;
+  height: 20px;
+  filter: none; /* remove drop shadows for cleaner look */
+  vertical-align: middle;
+  pointer-events: none;
+  z-index: 1;
+  background: none;
+}
+
+.tag.tag-icon .tag-tooltip {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a2a;
+  color: #fff;
+  padding: 6px 18px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 12px #1ac4f8cc;
+  z-index: 10;
+  letter-spacing: 1px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.tag.tag-icon:hover .tag-tooltip {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+    .tag.tag-icon:hover .tag-tooltip {
+      display: block;
+      opacity: 1;
+    }
+    .profile-status {
+      font-size: 1.15rem;
+      color: #3e3e3e;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 0 1px 6px #fff;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      opacity: 0.96;
+    }
+    .discord-status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-size: 1rem;
+      margin-bottom: 6px;
+      margin-top: 6px;
+      color: #5865F2;
+      font-weight: 700;
+      text-shadow: 0 1px 8px #1ac4f8cc;
+      width: 100%;
+    }
+    .discord-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+    }
+    .discord-row img {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      margin-right: 3px;
+      vertical-align: middle;
+      box-shadow: 0 0 8px #5865F2;
+      filter: drop-shadow(0 0 10px #5865F2);
+      background: rgba(255,255,255,0.12);
+    }
+    .spotify-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 1.02em;
+      font-weight: 600;
+      color: #1db954;
+      background: rgba(0,0,0,0.09);
+      border-radius: 15px;
+      padding: 10px 18px;
+      box-shadow: 0 2px 18px #1db95433;
+      text-shadow: 0 1px 6px #1db95488;
+      max-width: 370px;
+    }
+    .spotify-row img {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      margin-right: 7px;
+      box-shadow: 0 0 14px #1db95477;
+      filter: drop-shadow(0 0 10px #1db954);
+      vertical-align: middle;
+    }
+    .spotify-track-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      min-width: 0;
+    }
+    .spotify-song {
+      font-weight:700;
+      color:#fff;
+      font-size:1.09em;
+      text-shadow: 0 1px 8px #000a, 0 0 4px #1db954;
+      margin-bottom:2px;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .spotify-artist {
+      font-size:0.97em;
+      color:#b86fff;
+      font-weight:500;
+      text-shadow: 0 0 6px #b86fff44, 0 1px 8px #000a;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .profile-location {
+      font-size: 1.12rem;
+      color: #ff4e9b;
+      margin-bottom: 18px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px #1ac4f822;
+      font-family: 'Inter', sans-serif;
+    }
+    .profile-location-icon {
+      font-size: 1.15rem;
+      color: #ff4e9b;
+      vertical-align: middle;
+      margin-right: 2px;
+      filter: drop-shadow(0 0 6px #ff4e9bcc);
+    }
+    .description {
+      font-size: 1.08rem;
+      color: #bdbdbd;
+      margin-bottom: 14px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 1px;
+      opacity: 0.89;
+      text-shadow: 0 1px 6px #000;
+      animation: fadeInDesc 1.4s cubic-bezier(.25,.8,.25,1);
+      font-weight: 600;
+    }
+    @keyframes fadeInDesc {
+      from { opacity: 0; transform: translateY(10px);}
+      to { opacity: 0.89; transform: translateY(0);}
+    }
+    .bat {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      top: 8px;
+      left: 8px;
+      opacity: 0.7;
+      animation: batFly 4s infinite alternate ease-in-out;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .bat2 {
+      left: auto;
+      right: 8px;
+      top: 14px;
+      animation-delay: 2s;
+      transform: scaleX(-1);
+    }
+    @keyframes batFly {
+      0% { transform: translateY(0) scale(1);}
+      100% { transform: translateY(12px) scale(1.08);}
+    }
+    .links-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 22px;
+      margin-top: 36px;
+      margin-bottom: 0;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+    .animated-link {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(90deg, #1ac4f8 0%, #b86fff 100%);
+      box-shadow: 0 2px 20px #1ac4f8cc, 0 0 12px #b86fff88;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+      opacity: 0.97;
+      animation: floatBtn 0.75s cubic-bezier(.45,.09,.56,.99) infinite alternate;
+      will-change: transform;
+    }
+    .links-row .animated-link:nth-child(1) { animation-delay: 0.05s; }
+    .links-row .animated-link:nth-child(2) { animation-delay: 0.15s; }
+    .links-row .animated-link:nth-child(3) { animation-delay: 0.26s; }
+    .links-row .animated-link:nth-child(4) { animation-delay: 0.35s; }
+    .links-row .animated-link:nth-child(5) { animation-delay: 0.45s; }
+    .links-row .animated-link:nth-child(6) { animation-delay: 0.55s; }
+    .links-row .animated-link:nth-child(7) { animation-delay: 0.65s; }
+    @keyframes floatBtn {
+      0% { transform: translateY(0) scale(1);}
+      30% { transform: translateY(-10px) scale(1.12);}
+      55% { transform: translateY(-19px) scale(1.16);}
+      80% { transform: translateY(-11px) scale(1.12);}
+      100% { transform: translateY(0) scale(1);}
+    }
+    .animated-link:hover {
+      background: linear-gradient(90deg, #b86fff 0%, #1ac4f8 100%);
+      box-shadow: 0 8px 34px #b86fffcc, 0 0 34px #1ac4f8cc;
+      opacity: 1;
+      transform: scale(1.21) translateY(-4px);
+      z-index: 2;
+    }
+    .animated-link img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 7px #1ac4f8cc) drop-shadow(0 0 12px #b86fff);
+      border-radius: 10px;
+      pointer-events: none;
+      user-select: none;
+      transition: filter 0.2s;
+    }
+    .animated-link:hover img {
+      filter: drop-shadow(0 2px 12px #b86fffcc) drop-shadow(0 0 24px #1ac4f8cc);
+    }
+    #btcBtn, #ethBtn {
+      background: linear-gradient(90deg, #f2a900 0%, #ffd632 100%);
+      box-shadow: 0 2px 20px #f2a900cc, 0 0 12px #ffd63288;
+    }
+    #btcBtn:hover, #ethBtn:hover {
+      background: linear-gradient(90deg, #ffd632 0%, #f2a900 100%);
+      box-shadow: 0 8px 34px #ffd632cc, 0 0 34px #f2a900cc;
+    }   
+    .fog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('images/fog.png') center center/cover no-repeat fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.18;
+      animation: fogMove 120s linear infinite;
+    }
+    @keyframes fogMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 1000px 0; }
+    }
+    
+    .music-btn {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1ac4f8 0%, #b86fff 100%);
+      box-shadow: 0 2px 24px #1ac4f8cc, 0 0 8px #b86fff88;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      border: none;
+      outline: none;
+      cursor: url('/cursors/cursor.png'), pointer !important;
+      transition: background 0.3s, box-shadow 0.2s, transform 0.2s;
+      opacity: 0.93;
+      animation: musicPulse 2.2s infinite alternate;
+    }
+    @keyframes musicPulse {
+      0% { box-shadow: 0 2px 16px #1ac4f8cc, 0 0 8px #b86fff88;}
+      100% { box-shadow: 0 6px 32px #b86fffcc, 0 0 24px #1ac4f8cc;}
+    }
+    .music-btn:active {
+      transform: scale(0.97);
+      background: linear-gradient(135deg, #b86fff 0%, #1ac4f8 100%);
+    }
+    .music-btn img {
+      width: 27px;
+      height: 27px;
+      filter: drop-shadow(0 2px 12px #b86fffcc);
+      opacity: 1;
+      transition: filter 0.2s, opacity 0.2s;
+      pointer-events: none;
+      user-select: none;
+    }
+    .music-btn.muted img {
+      opacity: 0.45;
+      filter: grayscale(1) drop-shadow(0 2px 6px #1ac4f8);
+    }
+    .music-btn.playing img {
+      opacity: 1;
+      filter: drop-shadow(0 2px 12px #b86fffcc);
+    }
+    .music-btn .music-tooltip {
+      display: none;
+      position: absolute;
+      bottom: 60px;
+      right: 0;
+      background: #222;
+      color: #fff;
+      padding: 6px 18px;
+      border-radius: 12px;
+      font-size: 1rem;
+      box-shadow: 0 2px 12px #1ac4f8cc;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      z-index: 10000;
+      opacity: 0.95;
+    }
+    .music-btn:hover .music-tooltip {
+      display: block;
+    }
+  </style>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const card = document.getElementById('card');
+      let currentX = 0, currentY = 0, targetX = 0, targetY = 0;
+      let isHovering = false;
+      let animationFrameId = null;
+      function animateTilt() {
+        currentX += (targetX - currentX) * 0.22;
+        currentY += (targetY - currentY) * 0.22;
+        card.style.transform = `perspective(1400px) rotateX(${currentX}deg) rotateY(${currentY}deg) scale(${isHovering ? "1.07" : "1"})`;
+        if (isHovering || Math.abs(currentX) > 0.03 || Math.abs(currentY) > 0.03) {
+          animationFrameId = requestAnimationFrame(animateTilt);
+        } else {
+          card.style.transform = `perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1)`;
+          currentX = 0; currentY = 0;
+          animationFrameId = null;
+        }
+      }
+      card.addEventListener('mousemove', function(e){
+        const rect = card.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const mouseX = e.clientX - centerX;
+        const mouseY = e.clientY - centerY;
+        targetX = (mouseY / (rect.height / 2)) * 13;
+        targetY = -(mouseX / (rect.width / 2)) * 13;
+        isHovering = true;
+        card.classList.add('tilted');
+        if (!animationFrameId) animateTilt();
+      });
+      card.addEventListener('mouseleave', function(){
+        isHovering = false;
+        targetX = 0;
+        targetY = 0;
+        card.classList.remove('tilted');
+        if (!animationFrameId) animateTilt();
+      });
+      card.addEventListener('mouseenter', function() {
+        isHovering = true;
+        if (!animationFrameId) animateTilt();
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const btn = document.createElement('button');
+      btn.className = 'music-btn';
+      btn.title = 'Mute music';
+      btn.innerHTML = `
+        <img src="images/music.png" alt="Music" id="musicIcon">
+        <span class="music-tooltip" id="musicTooltip">Mute music</span>
+      `;
+      document.body.appendChild(btn);
+
+      const audio = new Audio('music/music2.mp3');
+      audio.loop = true;
+      audio.volume = 0.22;
+      audio.preload = 'auto';
+      audio.muted = false;
+      let isPlaying = false;
+      let isMuted = false;
+
+      function tryPlay() {
+        audio.play().then(() => {
+          isPlaying = true;
+          isMuted = false;
+          updateBtnState();
+        }).catch(() => {
+          isPlaying = false;
+          updateBtnState();
+        });
+      }
+
+      function autoStart() {
+        if (!isPlaying) tryPlay();
+        window.removeEventListener('click', autoStart);
+        window.removeEventListener('touchstart', autoStart);
+      }
+      window.addEventListener('click', autoStart);
+      window.addEventListener('touchstart', autoStart);
+
+      setTimeout(tryPlay, 300);
+
+      function updateBtnState() {
+        btn.classList.toggle('playing', isPlaying);
+        btn.classList.toggle('muted', isMuted || !isPlaying);
+        document.getElementById('musicTooltip').textContent = isPlaying
+          ? (isMuted ? "Unmute music" : "Mute music")
+          : "Play music";
+      }
+
+      btn.addEventListener('click', function (e) {
+        if (!isPlaying) {
+          tryPlay();
+        } else {
+          isMuted = !isMuted;
+          audio.muted = isMuted;
+          updateBtnState();
+        }
+      });
+
+      btn.addEventListener('mousedown', function () {
+        if (!isPlaying) tryPlay();
+      });
+
+      window.addEventListener('blur', () => { audio.pause(); });
+      window.addEventListener('focus', () => { if (isPlaying && !isMuted) audio.play(); });
+
+      audio.addEventListener('ended', () => {
+        isPlaying = false;
+        isMuted = false;
+        updateBtnState();
+      });
+
+      updateBtnState();
+    });
+  
+    document.addEventListener('DOMContentLoaded', function () {
+      const discordId = "1406384086154477793";
+      const discordStatus = document.createElement('div');
+      discordStatus.className = "discord-status";
+      discordStatus.id = "discordStatus";
+      discordStatus.innerHTML = `<div class="discord-row"><img src="images/discord.png" alt="discord avatar"> Loading Discord status...</div>`;
+      document.querySelector('.profile-status').insertAdjacentElement('afterend', discordStatus);
+
+      fetch(`https://api.lanyard.rest/v1/users/${discordId}`)
+        .then(resp => resp.json())
+        .then(data => {
+          if (data && data.success && data.data && data.data.discord_user) {
+            const user = data.data;
+            let statusMap = {
+              online: 'Online',
+              idle: 'Idle',
+              dnd: 'Do Not Disturb',
+              offline: 'Offline'
+            };
+            let statusText = statusMap[user.discord_status] || 'Offline';
+            let avatarUrl = user.discord_user.avatar
+              ? `https://cdn.discordapp.com/avatars/${discordId}/${user.discord_user.avatar}.png`
+              : `https://cdn.discordapp.com/embed/avatars/${user.discord_user.discriminator % 5}.png`;
+            let activity = "";
+            if (user.activities && user.activities.length > 0) {
+              const act = user.activities.find(a=>a.name && a.name!=="Custom Status");
+              if (act) activity = ` &mdash; <span style="color:#b86fff;font-size:0.98em;">${act.name}</span>`;
+            }
+            let discordRow = `<div class="discord-row"><img src="${avatarUrl}" alt="discord avatar"> <span>${statusText}${activity}</span></div>`;
+          
+            let spotifyRow = "";
+            if (user.listening_to_spotify && user.spotify) {
+              let s = user.spotify;
+              spotifyRow = `<div class="spotify-row">
+                <img src="${s.album_art_url}" alt="Spotify album art">
+                <div class="spotify-track-info">
+                  <div class="spotify-song">${s.song}</div>
+                  <div class="spotify-artist">${s.artist}</div>
+                </div>
+              </div>`;
+            }
+            discordStatus.innerHTML = discordRow + spotifyRow;
+          } else {
+            discordStatus.innerHTML = `<div class="discord-row"><img src="images/discord.png" alt="discord avatar"> Not Found (User must be online or public Discord presence enabled)</div>`;
+          }
+        })
+        .catch(() => {
+          discordStatus.innerHTML = `<div class="discord-row">Unavailable</div>`;
+        });
+    });
+  </script>
+</head>
+<body>
+<div class="fog"></div>
+<div class="glass-card" id="card">
+  <img src="images/bat.png" class="bat" alt="bat spooky">
+  <img src="images/bat.png" class="bat bat2" alt="bat spooky">
+  <div class="profile-header">
+    <img src="images/avatar.png" alt="avatar" class="profile-avatar">
+    <div class="profile-name-row" style="position:relative;">
+      <span class="profile-name">ꜱᴜꜰꜰᴇʀ</span>
+      <span class="tag tag-icon">
+  <img src="images/premium.png" alt="Premium">
+  <span class="tag-tooltip">premium</span>
+</span>
+<span class="tag tag-icon">
+  <img src="images/developer.png" alt="Developer">
+  <span class="tag-tooltip">developer</span>
+</span>
+    </div>
+   <div class="profile-status">Crafted with Joy</div>
+<div class="profile-location">
+  <span class="profile-location-icon">💻</span>
+  <span id="typewriter-text" style="color:#b86fff; font-weight:700; font-family: 'Inter', sans-serif; white-space: nowrap; border-right: 2px solid #b86fff; overflow: hidden;"></span>
+</div>
+
+<style>
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 14ch }
+  }
+
+  @keyframes blink {
+    0%, 100% { border-color: transparent }
+    50% { border-color: #b86fff }
+  }
+</style>
+
+<script>
+  const text = "Active Developer";
+  const el = document.getElementById('typewriter-text');
+  let index = 0;
+  let forward = true;
+
+  function typewriter() {
+    if (forward) {
+      index++;
+      el.textContent = text.slice(0, index);
+      el.style.width = `${index}ch`;
+      if (index === text.length) {
+        forward = false;
+        setTimeout(typewriter, 2000); 
+      } else {
+        setTimeout(typewriter, 2000 / text.length); 
+      }
+    } else {
+      index--;
+      el.textContent = text.slice(0, index);
+      el.style.width = `${index}ch`;
+      if (index === 0) {
+        forward = true;
+        setTimeout(typewriter, 200); 
+      } else {
+        setTimeout(typewriter, 2000 / text.length);
+      }
+    }
+  }
+
+  typewriter();
+</script>   
+  </div>
+  <div class="description">created by 2u91</div>
+  <div class="links-row">
+    <a class="animated-link" href="https://discord.com/users/1406384086154477793" target="_blank">
+      <img src="images/discord.png" alt="Discord">
+    </a>
+    <a class="animated-link" href="https://github.com/bkz09287" target="_blank">
+      <img src="images/github.png" alt="GitHub">
+    </a>
+    <a class="animated-link" href="https://soundcloud.com/yourprofile" target="_blank">
+      <img src="images/soundcloud.png" alt="SoundCloud">
+    </a>
+    <a class="animated-link" href="https://paypal.me/yourprofile" target="_blank">
+      <img src="images/paypal.png" alt="PayPal">
+    </a>
+    <a class="animated-link" href="https://steamcommunity.com/profiles/76561198794422735" target="_blank">
+      <img src="images/steam.png" alt="Steam">
+    </a>
+    <button class="animated-link" id="btcBtn" title="Copy BTC address">
+      <img src="images/btc.png" alt="bc1qna644xp0ju9atnalte8n75ys4kdvw76a5aymdw" style="width:100%;height:100%;border-radius:12px;">
+    </button>
+    <button class="animated-link" id="ethBtn" title="Copy ETH address">
+      <img src="images/eth.png" alt="0x764ce3bFc2bD82846789810f98eCB9ed98317432" style="width:100%;height:100%;border-radius:12px;">
+    </button>
+  </div>
+</div>
+</body>
+</html>
